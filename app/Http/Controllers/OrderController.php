@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Department;
+use App\Order;
 use Illuminate\Http\Request;
 
-class DepartmentController extends Controller
+class OrderController extends Controller
 {
+    /**
+     * OrderController constructor.
+     */
     public function __construct()
     {
         $this->middleware('auth');
@@ -19,9 +22,10 @@ class DepartmentController extends Controller
      */
     public function index()
     {
-        if (request()->expectsJson()) {
-            return Department::all();
-        }
+        return [
+            'incomingOrders' => auth()->user()->incomingOrders,
+            'outgoingOrders' => auth()->user()->outgoingOrders
+        ];
     }
 
     /**
@@ -37,25 +41,27 @@ class DepartmentController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        $this->middleware('admin');
-        $department = Department::create($request->all());
-        if ($request->expectsJson()) {
-            return $department;
-        }
+        $this->validate($request, [
+            'title' => 'required',
+            'body' => 'required',
+            'worker_id' => 'exists:users,id',
+            'due_date' => 'date'
+        ]);
+        auth()->user()->createOrder($request->all());
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int $id
+     * @param  \App\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Order $order)
     {
         //
     }
@@ -63,10 +69,10 @@ class DepartmentController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int $id
+     * @param  \App\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Order $order)
     {
         //
     }
@@ -74,27 +80,23 @@ class DepartmentController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  int $id
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Order $order)
     {
-        Department::findOrFail($id)->update(request()->all());
-        if ($request->expectsJson()) {
-            return ['success' => true];
-        }
+        //
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
+     * @param  \App\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Order $order)
     {
-        Department::findOrFail($id)->delete();
+        //
     }
 }
-

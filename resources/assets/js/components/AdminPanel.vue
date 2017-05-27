@@ -3,12 +3,12 @@
         <ul class="nav nav-tabs" role="tablist">
             <li role="presentation" class="active">
                 <a href="#departments" aria-controls="departments" role="tab"
-                                                      data-toggle="tab">Отделы
+                   data-toggle="tab">Отделы
                 </a>
             </li>
             <li role="presentation">
                 <a href="#workers" aria-controls="workers" role="tab"
-                                       data-toggle="tab">Сотрудники
+                   data-toggle="tab">Сотрудники
                 </a>
             </li>
         </ul>

@@ -12,7 +12,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr v-for="worker in this.workers">
+            <tr v-for="worker in this.workers" @click="edit(worker)" :key="worker.id">
                 <td v-text="worker.surname"></td>
                 <td v-text="worker.name"></td>
                 <td v-text="worker.patronymic"></td>
@@ -22,7 +22,7 @@
             </tr>
             </tbody>
         </table>
-        <new-worker @added="added"></new-worker>
+        <new-worker ref="new_worker" @added="added"></new-worker>
     </div>
 </template>
 
@@ -46,7 +46,10 @@
         methods: {
             added(person) {
                 this.$emit('added', person);
-            }
+            },
+            edit(worker) {
+                this.$refs.new_worker.edit(worker);
+            },
         }
     }
 </script>

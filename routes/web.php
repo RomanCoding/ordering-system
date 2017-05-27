@@ -15,9 +15,15 @@ Route::get('/', 'Auth\LoginController@showLoginForm');
 Route::get('/admin', 'AdminController@index');
 Route::get('/departments', 'DepartmentController@index');
 Route::post('/departments', 'DepartmentController@store');
+Route::patch('/departments/{department}', 'DepartmentController@update');
+Route::delete('/departments/{department}', 'DepartmentController@destroy');
 Route::get('/workers', 'WorkerController@index');
 Route::post('/workers', 'WorkerController@store');
+Route::patch('/workers/{user}', 'WorkerController@update');
+
+Route::get('/orders', 'OrderController@index');
+Route::post('/orders', 'OrderController@store');
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/profile', 'ProfileController@index');

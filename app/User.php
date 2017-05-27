@@ -40,6 +40,16 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Department::class);
     }
+    
+    public function outgoingOrders()
+    {
+        return $this->hasMany(Order::class, 'creator_id')->orderBy('due_date');
+    }
+
+    public function incomingOrders()
+    {
+        return $this->hasMany(Order::class, 'worker_id')->orderBy('due_date');
+    }
 
     /**
      * Check if a user is an administrator.
@@ -53,6 +63,21 @@ class User extends Authenticatable
 
     public function getDepartmentAttribute()
     {
-        return Department::find($this->department_id)->first();
+        return Department::findOrFail($this->department_id)->first();
+    }
+
+    public function scopeWorkers($query)
+    {
+        return $query->where('admin', 0);
+    }
+    
+    public function createOrder($order)
+    {
+        $this->outgoingOrders()->create([
+            'worker_id' => $order['worker_id'],
+            'due_date' => $order['due_date'],
+            'title' => $order['title'],
+            'body' => $order['body']
+        ]);
     }
 }

@@ -47,9 +47,7 @@
         </div>
 
         <div class="col-md-6 col-md-offset-4">
-            <button type="submit" class="btn btn-default" @click="add">
-                Добавить пользователя
-            </button>
+            <button type="submit" class="btn btn-default" @click="submit" v-text="buttonText"></button>
         </div>
     </div>
 </template>
@@ -67,7 +65,8 @@
                     email: '',
                     password: '',
                     description: ''
-                }
+                },
+                editing: false,
             }
         },
         created() {
@@ -75,17 +74,45 @@
                 this.departments = data;
             });
         },
+        computed: {
+            buttonText() {
+                return this.editing ? 'Обновить' : 'Добавить';
+            }
+        },
         methods: {
+            submit() {
+                this.editing ? this.update() : this.add();
+                this.editing = false;
+                this.clearForm();
+            },
             add() {
                 axios.post('/workers', this.person).then((response) => {
                     this.$emit('added', response.data);
                     this.clearForm();
                 });
             },
+            update() {
+                console.log(this.person);
+                axios.patch('/workers/' + this.person.id, this.person).then(({data}) => {
+                    if (data.success) {
+                        flash('Updated!');
+                    }
+                });
+            },
             clearForm() {
-                for(let field in this.person) {
-                    this.person[field] = '';
+                this.department = {
+                    surname: '',
+                    name: '',
+                    patronymic: '',
+                    department_id: '',
+                    email: '',
+                    password: '',
+                    description: ''
                 }
+            },
+            edit(person) {
+                this.editing = true;
+                this.person = person;
             }
         }
     }

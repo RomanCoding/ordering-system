@@ -17,6 +17,7 @@ window.Vue = require('vue');
 
 Vue.component('flash', require('./components/Flash.vue'));
 Vue.component('admin-panel', require('./components/AdminPanel.vue'));
+Vue.component('orders', require('./components/Orders.vue'));
 
 const app = new Vue({
     el: '#app'

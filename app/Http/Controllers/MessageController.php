@@ -2,16 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Department;
+use App\Message;
 use Illuminate\Http\Request;
 
-class DepartmentController extends Controller
+class MessageController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -19,9 +14,7 @@ class DepartmentController extends Controller
      */
     public function index()
     {
-        if (request()->expectsJson()) {
-            return Department::all();
-        }
+        //
     }
 
     /**
@@ -37,25 +30,21 @@ class DepartmentController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        $this->middleware('admin');
-        $department = Department::create($request->all());
-        if ($request->expectsJson()) {
-            return $department;
-        }
+        //
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int $id
+     * @param  \App\Message  $message
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Message $message)
     {
         //
     }
@@ -63,10 +52,10 @@ class DepartmentController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int $id
+     * @param  \App\Message  $message
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Message $message)
     {
         //
     }
@@ -74,27 +63,23 @@ class DepartmentController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  int $id
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Message  $message
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Message $message)
     {
-        Department::findOrFail($id)->update(request()->all());
-        if ($request->expectsJson()) {
-            return ['success' => true];
-        }
+        //
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
+     * @param  \App\Message  $message
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Message $message)
     {
-        Department::findOrFail($id)->delete();
+        //
     }
 }
-

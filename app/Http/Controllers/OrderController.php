@@ -52,7 +52,12 @@ class OrderController extends Controller
             'worker_id' => 'exists:users,id',
             'due_date' => 'date'
         ]);
-        auth()->user()->createOrder($request->all());
+        $order = auth()->user()->createOrder($request->all());
+
+        if ($request->hasFile('file')) {
+            $path = $request->file('file')->store("files/{$order->id}");
+            $order->attachFile($path);
+        }
     }
 
     /**
@@ -63,7 +68,7 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        //
+        return $order;
     }
 
     /**

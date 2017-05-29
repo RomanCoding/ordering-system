@@ -9,7 +9,7 @@
                     <input type="text" v-model="title" placeholder="Заголовок" class="form-control">
                 </div>
                 <div class="form-group">
-                    <textarea v-model="body" cols="30" rows="10" class="form-control" placeholder="Задание"></textarea>
+                    <textarea v-model="body" cols="30" rows="5" class="form-control" placeholder="Задание"></textarea>
                 </div>
                 <div class="form-group col-md-10" style="padding-left: 0;">
                     <select v-model="worker_id" class="form-control">
@@ -22,7 +22,7 @@
                     </label>
                 </div>
                 <div class="btn-group">
-                    <input ref="file_input" type="file" class="hidden">
+                    <input ref="file_input" type="file" class="hidden" @change="onFileChange">
                     <button class="btn btn-success" @click="open">Прикрепить файл</button>
                     <button class="btn btn-default col-xs-push-1" @click="create">Отправить</button>
                 </div>
@@ -40,7 +40,8 @@
                 title: '',
                 body: '',
                 worker_id: '',
-                due_date: ''
+                due_date: '',
+                formData: null
             }
         },
 
@@ -52,13 +53,27 @@
                 this.$refs.file_input.click()
             },
             create() {
-                axios.post('/orders', {
-                    title: this.title,
-                    body: this.body,
-                    worker_id: this.worker_id,
-                    due_date: this.due_date
-                });
-            }
+                this.formData.append('title', this.title);
+                this.formData.append('body', this.body);
+                this.formData.append('worker_id', this.worker_id);
+                this.formData.append('due_date', this.due_date);
+                axios.post('/orders', this.formData);
+            },
+            onFileChange (ele) {
+                this.errors = {};
+
+                let files = ele.target.files || ele.dataTransfer.files;
+
+                if (!files.length) {
+                    return;
+                }
+
+                this.file = files[0];
+
+                var form = new FormData();
+                form.append('file', this.file, this.file.name);
+                this.formData = form;
+            },
         }
     }
 </script>

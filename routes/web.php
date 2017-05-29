@@ -23,6 +23,9 @@ Route::patch('/workers/{user}', 'WorkerController@update');
 
 Route::get('/orders', 'OrderController@index');
 Route::post('/orders', 'OrderController@store');
+Route::post('/orders/{order}', 'MessageController@store');
+Route::get('/files/{order}/{file}', 'FileController@show');
+Route::post('/files/{order}/', 'FileController@store');
 
 Auth::routes();
 

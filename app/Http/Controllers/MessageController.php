@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Message;
+use App\Order;
 use Illuminate\Http\Request;
 
 class MessageController extends Controller
@@ -29,13 +30,15 @@ class MessageController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Order $order
+     * @return Message
      */
-    public function store(Request $request)
+    public function store(Order $order)
     {
-        //
+        $this->validate(request(), [
+            'body' => 'required'
+        ]);
+        return $order->addMessage(request('body'));
     }
 
     /**

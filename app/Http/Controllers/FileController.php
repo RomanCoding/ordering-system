@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Department;
+use App\File;
+use App\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
-class DepartmentController extends Controller
+class FileController extends Controller
 {
+    /**
+     * FileController constructor.
+     */
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('admin')->only(['store', 'update', 'destroy']);
     }
 
     /**
@@ -20,9 +24,7 @@ class DepartmentController extends Controller
      */
     public function index()
     {
-        if (request()->expectsJson()) {
-            return Department::all();
-        }
+        //
     }
 
     /**
@@ -38,35 +40,38 @@ class DepartmentController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
+     * @param Order $order
      */
-    public function store(Request $request)
+    public function store(Order $order)
     {
-        $department = Department::create($request->all());
-        if ($request->expectsJson()) {
-            return $department;
+        if (request()->hasFile('file')) {
+            $path = request()->file('file')->store("files/{$order->id}");
+            $order->attachFile($path);
         }
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int $id
+     * @param $order
+     * @param $file
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($order, $file)
     {
-        //
+        $filename = "files/{$order}/{$file}";
+        if (Storage::exists($filename)) {
+            return response()->download(storage_path() ."/app/{$filename}");
+        }
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int $id
+     * @param  \App\File  $file
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(File $file)
     {
         //
     }
@@ -74,27 +79,23 @@ class DepartmentController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  int $id
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\File  $file
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, File $file)
     {
-        Department::findOrFail($id)->update(request()->all());
-        if ($request->expectsJson()) {
-            return ['success' => true];
-        }
+        //
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
+     * @param  \App\File  $file
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(File $file)
     {
-        Department::findOrFail($id)->delete();
+        //
     }
 }
-

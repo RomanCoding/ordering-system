@@ -70,10 +70,15 @@ class User extends Authenticatable
     {
         return $query->where('admin', 0);
     }
+
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = bcrypt($value);
+    }
     
     public function createOrder($order)
     {
-        $this->outgoingOrders()->create([
+        return $this->outgoingOrders()->create([
             'worker_id' => $order['worker_id'],
             'due_date' => $order['due_date'],
             'title' => $order['title'],

@@ -11,9 +11,8 @@ class Department extends Model
      *
      * @var array
      */
-    protected $fillable = [
-        'name', 'description',
-    ];
+    protected $fillable = ['name', 'description'];
+
     /**
      * Department has workers.
      *

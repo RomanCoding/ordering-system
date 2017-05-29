@@ -8,9 +8,9 @@ class Order extends Model
 {
     protected $fillable = ['worker_id', 'body', 'title', 'due_date'];
 
-    protected $with = ['creator', 'worker'];
+    protected $with = ['creator', 'worker', 'files'];
 
-    protected $appends = ['creator', 'worker'];
+    protected $appends = ['creator', 'worker', 'messages', 'files'];
 
     /**
      * A person who created an order.
@@ -42,13 +42,49 @@ class Order extends Model
         return $this->hasMany(Message::class);
     }
 
+    /**
+     * Attachments related to an order.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function files()
+    {
+        return $this->hasMany(File::class);
+    }
+
     public function getCreatorAttribute()
     {
-        return $this->creator();
+        return $this->creator()->get();
     }
 
     public function getWorkerAttribute()
     {
-        return $this->worker();
+        return $this->worker()->get();
+    }
+
+    public function getMessagesAttribute()
+    {
+        return $this->messages()->get();
+    }
+
+    public function getFilesAttribute()
+    {
+        return $this->files()->get();
+    }
+
+    public function attachFile($file)
+    {
+        $this->files()->create([
+            'path' => $file,
+            'sender_id' => auth()->id()
+        ]);
+    }
+
+    public function addMessage($body)
+    {
+        return $this->messages()->create([
+            'sender_id' => auth()->id(),
+            'body' => $body
+        ]);
     }
 }

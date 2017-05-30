@@ -23,6 +23,7 @@ Route::patch('/workers/{user}', 'WorkerController@update');
 
 Route::get('/orders', 'OrderController@index');
 Route::post('/orders', 'OrderController@store');
+Route::delete('/orders/{order}', 'OrderController@destroy');
 Route::post('/orders/{order}', 'MessageController@store');
 Route::get('/files/{order}/{file}', 'FileController@show');
 Route::post('/files/{order}/', 'FileController@store');

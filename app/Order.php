@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
-    protected $fillable = ['worker_id', 'body', 'title', 'due_date'];
+    protected $fillable = ['worker_id', 'body', 'title', 'due_date', 'important', 'closed'];
 
     protected $with = ['creator', 'worker', 'files'];
 
@@ -86,5 +86,11 @@ class Order extends Model
             'sender_id' => auth()->id(),
             'body' => $body
         ]);
+    }
+
+    public function markAsClosed()
+    {
+        $this->update(['closed' => 1]);
+        return $this;
     }
 }

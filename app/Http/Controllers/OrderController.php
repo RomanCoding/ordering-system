@@ -102,6 +102,7 @@ class OrderController extends Controller
      */
     public function destroy(Order $order)
     {
-        //
+        $this->authorize('close', $order);
+        return $order->markAsClosed();
     }
 }

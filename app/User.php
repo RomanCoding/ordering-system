@@ -82,7 +82,8 @@ class User extends Authenticatable
             'worker_id' => $order['worker_id'],
             'due_date' => $order['due_date'],
             'title' => $order['title'],
-            'body' => $order['body']
+            'body' => $order['body'],
+            'important' => $order['important']
         ]);
     }
 }

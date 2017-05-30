@@ -9,17 +9,28 @@
                     <input type="text" v-model="title" placeholder="Заголовок" class="form-control">
                 </div>
                 <div class="form-group">
-                    <textarea v-model="body" cols="30" rows="5" class="form-control" placeholder="Задание"></textarea>
+                    <textarea v-model="body" rows="5" class="form-control" placeholder="Задание"></textarea>
                 </div>
-                <div class="form-group col-md-10" style="padding-left: 0;">
+                <div class="form-group col-xs-6 no-left-padding">
                     <select v-model="worker_id" class="form-control">
                         <option v-for="worker in workers" :value="worker.id" v-text="fullname(worker)"></option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label>Выполнить до:
-                        <input v-model="due_date" type="date" class="form-control">
-                    </label>
+                <div class="form-group form-inline col-xs-4">
+                    <label for="date">Выполнить до:</label>
+                    <input id="date" v-model="due_date" type="date" class="form-control">
+                </div>
+                <div class="form-group col-xs-2">
+                    <input type="checkbox" id="checkbox-success" v-model="important" autocomplete="off">
+                    <div class="btn-group">
+                        <label for="checkbox-success" class="btn btn-success">
+                            <span class="glyphicon glyphicon-ok"></span>
+                            <span> </span>
+                        </label>
+                        <label for="checkbox-success" class="btn btn-default active">
+                            Важно
+                        </label>
+                    </div>
                 </div>
                 <div class="btn-group">
                     <input ref="file_input" type="file" class="hidden" @change="onFileChange">
@@ -41,6 +52,7 @@
                 body: '',
                 worker_id: '',
                 due_date: '',
+                important: 0,
                 formData: null
             }
         },
@@ -53,10 +65,14 @@
                 this.$refs.file_input.click()
             },
             create() {
+                if (!this.formData) {
+                    this.formData = new FormData();
+                }
                 this.formData.append('title', this.title);
                 this.formData.append('body', this.body);
                 this.formData.append('worker_id', this.worker_id);
                 this.formData.append('due_date', this.due_date);
+                this.formData.append('important', +this.important);
                 axios.post('/orders', this.formData);
             },
             onFileChange (ele) {
@@ -77,3 +93,29 @@
         }
     }
 </script>
+
+<style>
+    .form-group input[type="checkbox"] {
+        display: none;
+    }
+
+    .form-group input[type="checkbox"] + .btn-group > label span {
+        width: 20px;
+    }
+
+    .form-group input[type="checkbox"] + .btn-group > label span:first-child {
+        display: none;
+    }
+
+    .form-group input[type="checkbox"] + .btn-group > label span:last-child {
+        display: inline-block;
+    }
+
+    .form-group input[type="checkbox"]:checked + .btn-group > label span:first-child {
+        display: inline-block;
+    }
+
+    .form-group input[type="checkbox"]:checked + .btn-group > label span:last-child {
+        display: none;
+    }
+</style>

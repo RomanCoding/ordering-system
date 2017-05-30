@@ -20,6 +20,12 @@
             <div class="btn-group">
                 <button class="btn btn-default col-xs-push-1" @click="create">Отправить</button>
             </div>
+            <button class="btn btn-danger pull-right"
+                    v-if="yours(order.creator.id) && !order.closed"
+                    @click="toggleStatus">
+                Закрыть заказ
+            </button>
+            <h4 v-if="order.closed"><span class="label label-success pull-right">Заказ закрыт</span></h4>
         </div>
 
     </div>
@@ -41,7 +47,7 @@
             }
         },
         methods: {
-            moment(date=[]) {
+            moment(date = []) {
                 return moment(date).locale('ru');
             },
             create() {
@@ -58,6 +64,12 @@
             },
             classes(message_sender_id) {
                 return ['panel', 'panel-default', 'message', this.yours(message_sender_id) ? 'pull-right' : 'pull-left'];
+            },
+            toggleStatus() {
+                axios.delete('/orders/' + this.order.id)
+                    .then(() => {
+                        flash('Заказ закрыт!');
+                    });
             }
         }
     }
@@ -67,6 +79,7 @@
     .messages {
         background-color: #fff;
     }
+
     .message {
         background-color: #f3f8fc;
         padding: 3px;

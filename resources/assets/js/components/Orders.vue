@@ -13,7 +13,7 @@
             <div class="tab-content">
                 <div role="tabpanel" class="tab-pane active" id="home">
                     <!-- Tab panes -->
-                    <div class="col-md-3" style="padding-left: 0; padding-right: 0;">
+                    <div class="col-md-3 no-left-padding">
                         <div class="list-group">
                             <a href="#" :class="classes(order)" v-for="order in incomingOrders"
                                @click="currentOrder = order">
@@ -30,14 +30,16 @@
                 </div>
                 <div role="tabpanel" class="tab-pane" id="profile">
                     <!-- Tab panes -->
-                    <div class="col-md-4">
+                    <div class="col-md-3" style="padding-left: 0; padding-right: 0;">
                         <div class="list-group">
                             <a href="#" class="list-group-item" v-for="order in outgoingOrders"
                                @click="currentOrder = order">
                                 <h4 class="list-group-item-heading">{{ order.title }}</h4>
                                 <p class="list-group-item-text">
-                                    {{ order.worker.name }}
-                                    {{ order.due_date }}
+                                    Исполнитель: {{ order.worker.name }}
+                                </p>
+                                <p class="list-group-item-text">
+                                    Срок сдачи: {{ order.due_date }}
                                 </p>
                             </a>
                         </div>
@@ -51,7 +53,7 @@
                 <files v-bind:order="currentOrder"></files>
             </div>
         </div>
-        <div class="col-md-12">
+        <div class="col-md-12 new-order no-left-padding">
             <new-order :workers="this.workers">
 
             </new-order>
@@ -88,11 +90,11 @@
                 return [
                     'list-group-item',
                     moment(order.due_date).diff(moment(), 'days') < 4 ? 'list-group-item-warning' : '',
-                    moment(order.due_date).diff(moment(), 'days') < 2 ? 'list-group-item-danger' : '',
+                    (moment(order.due_date).diff(moment(), 'days') < 2 || order.important) ? 'list-group-item-danger' : '',
                 ];
             },
 
-            moment(date=[]) {
+            moment(date = []) {
                 return moment([]).locale('ru');
             }
         }

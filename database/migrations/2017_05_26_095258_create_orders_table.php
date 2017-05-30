@@ -20,6 +20,8 @@ class CreateOrdersTable extends Migration
             $table->date('due_date');
             $table->string('title');
             $table->text('body');
+            $table->boolean('closed')->default(0);
+            $table->boolean('important')->default(0);
             $table->timestamps();
         });
     }

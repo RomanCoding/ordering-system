@@ -72,6 +72,11 @@ class Order extends Model
         return $this->files()->get();
     }
 
+    /**
+     * Attach a file to an order.
+     *
+     * @param $file
+     */
     public function attachFile($file)
     {
         $this->files()->create([
@@ -80,6 +85,12 @@ class Order extends Model
         ]);
     }
 
+    /**
+     * Add a message to an order.
+     *
+     * @param $body
+     * @return Model
+     */
     public function addMessage($body)
     {
         return $this->messages()->create([
@@ -88,6 +99,11 @@ class Order extends Model
         ]);
     }
 
+    /**
+     * Close an order (mark as completed / canceled).
+     *
+     * @return $this
+     */
     public function markAsClosed()
     {
         $this->update(['closed' => 1]);

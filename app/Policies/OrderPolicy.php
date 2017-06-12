@@ -62,7 +62,7 @@ class OrderPolicy
      *
      * @param  \App\User  $user
      * @param  \App\Order  $order
-     * @return mixed
+     * @return boolean
      */
     public function close(User $user, Order $order)
     {

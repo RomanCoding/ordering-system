@@ -40,12 +40,22 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Department::class);
     }
-    
+
+    /**
+     * Orders created by user.
+     *
+     * @return mixed
+     */
     public function outgoingOrders()
     {
         return $this->hasMany(Order::class, 'creator_id')->orderBy('due_date');
     }
 
+    /**
+     * User is responsible for orders.
+     *
+     * @return mixed
+     */
     public function incomingOrders()
     {
         return $this->hasMany(Order::class, 'worker_id')->orderBy('due_date');
@@ -66,6 +76,12 @@ class User extends Authenticatable
         return Department::findOrFail($this->department_id)->first();
     }
 
+    /**
+     * Workers who are not admins.
+     *
+     * @param $query
+     * @return mixed
+     */
     public function scopeWorkers($query)
     {
         return $query->where('admin', 0);
@@ -75,15 +91,15 @@ class User extends Authenticatable
     {
         $this->attributes['password'] = bcrypt($value);
     }
-    
+
+    /**
+     * Create new outgoing order.
+     *
+     * @param $order
+     * @return mixed
+     */
     public function createOrder($order)
     {
-        return $this->outgoingOrders()->create([
-            'worker_id' => $order['worker_id'],
-            'due_date' => $order['due_date'],
-            'title' => $order['title'],
-            'body' => $order['body'],
-            'important' => $order['important']
-        ]);
+        return $this->outgoingOrders()->create($order->all());
     }
 }

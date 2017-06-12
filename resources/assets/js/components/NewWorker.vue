@@ -100,7 +100,7 @@
                 });
             },
             clearForm() {
-                this.department = {
+                this.person = {
                     surname: '',
                     name: '',
                     patronymic: '',

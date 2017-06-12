@@ -2,16 +2,18 @@
     <div>
         <!-- Nav tabs -->
         <ul class="nav nav-tabs" role="tablist" style="margin-bottom: 1em;">
-            <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab"
-                                                      data-toggle="tab">Входящие</a>
+            <li role="presentation" class="active">
+                <a href="#incoming" aria-controls="incoming" role="tab"
+                   data-toggle="tab">Входящие</a>
             </li>
-            <li role="presentation"><a href="#profile" aria-controls="profile" role="tab"
-                                       data-toggle="tab">Исходящие</a></li>
+            <li role="presentation">
+                <a href="#outcoming" aria-controls="outcoming" role="tab"
+                   data-toggle="tab">Исходящие</a>
+            </li>
         </ul>
         <div class="pre-scrollable">
-
             <div class="tab-content">
-                <div role="tabpanel" class="tab-pane active" id="home">
+                <div role="tabpanel" class="tab-pane active" id="incoming">
                     <!-- Tab panes -->
                     <div class="col-md-3 no-left-padding">
                         <div class="list-group">
@@ -28,7 +30,7 @@
                         </div>
                     </div>
                 </div>
-                <div role="tabpanel" class="tab-pane" id="profile">
+                <div role="tabpanel" class="tab-pane" id="outcoming">
                     <!-- Tab panes -->
                     <div class="col-md-3" style="padding-left: 0; padding-right: 0;">
                         <div class="list-group">
@@ -93,7 +95,6 @@
                     (moment(order.due_date).diff(moment(), 'days') < 2 || order.important) ? 'list-group-item-danger' : '',
                 ];
             },
-
             moment(date = []) {
                 return moment([]).locale('ru');
             }

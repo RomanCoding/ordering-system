@@ -46,8 +46,9 @@ class FileController extends Controller
     {
         if (request()->hasFile('file')) {
             $path = request()->file('file')->store("files/{$order->id}");
-            $order->attachFile($path);
+            $file = $order->attachFile($path);
         }
+        return $file;
     }
 
     /**

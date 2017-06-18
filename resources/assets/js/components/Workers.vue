@@ -9,16 +9,22 @@
                 <th>Отдел</th>
                 <th>Описание</th>
                 <th>E-Mail</th>
+                <th>Удалить сотрудника</th>
             </tr>
             </thead>
             <tbody>
-            <tr v-for="worker in this.workers" @click="edit(worker)" :key="worker.id">
+            <tr v-for="(worker, index) in this.workers" @click="edit(worker)" :key="worker.id">
                 <td v-text="worker.surname"></td>
                 <td v-text="worker.name"></td>
                 <td v-text="worker.patronymic"></td>
                 <td v-text="worker.department.name"></td>
                 <td v-text="worker.description"></td>
                 <td v-text="worker.email"></td>
+                <td>
+                    <a href="#" @click="destroy(index, worker.id)">
+                        <span class="glyphicon glyphicon-erase">Удалить</span>
+                    </a>
+                </td>
             </tr>
             </tbody>
         </table>
@@ -50,6 +56,10 @@
             edit(worker) {
                 this.$refs.new_worker.edit(worker);
             },
+            destroy(index, id) {
+                axios.delete('/workers/' + id);
+                this.workers.splice(index, 1);
+            }
         }
     }
 </script>

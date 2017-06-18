@@ -76,10 +76,11 @@ class Order extends Model
      * Attach a file to an order.
      *
      * @param $file
+     * @return Model
      */
     public function attachFile($file)
     {
-        $this->files()->create([
+        return $this->files()->create([
             'path' => $file,
             'sender_id' => auth()->id()
         ]);

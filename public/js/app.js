@@ -27439,6 +27439,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             return __WEBPACK_IMPORTED_MODULE_0_moment___default()(date).locale('ru');
         },
         onFileChange: function onFileChange(ele) {
+            var _this = this;
+
             this.errors = {};
 
             var files = ele.target.files || ele.dataTransfer.files;
@@ -27451,7 +27453,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             var form = new FormData();
             form.append('file', this.file, this.file.name);
-            axios.post('files/' + this.order.id, form);
+            axios.post('files/' + this.order.id, form).then(function (response) {
+                _this.files.push(response.data);
+            });
         },
         open: function open() {
             this.$refs.file_input.click();
@@ -27841,6 +27845,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -27907,6 +27912,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 password: '',
                 description: ''
             };
+            this.editing = false;
         },
         edit: function edit(person) {
             this.editing = true;
@@ -28071,6 +28077,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -28095,6 +28107,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         edit: function edit(worker) {
             this.$refs.new_worker.edit(worker);
+        },
+        destroy: function destroy(index, id) {
+            axios.delete('/workers/' + id);
+            this.workers.splice(index, 1);
         }
     }
 });
@@ -58964,7 +58980,7 @@ if (false) {
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', [(this.workers) ? _c('table', {
     staticClass: "table table-hover"
-  }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((this.workers), function(worker) {
+  }, [_vm._m(0), _vm._v(" "), _c('tbody', _vm._l((this.workers), function(worker, index) {
     return _c('tr', {
       key: worker.id,
       on: {
@@ -58996,7 +59012,18 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       domProps: {
         "textContent": _vm._s(worker.email)
       }
-    })])
+    }), _vm._v(" "), _c('td', [_c('a', {
+      attrs: {
+        "href": "#"
+      },
+      on: {
+        "click": function($event) {
+          _vm.destroy(index, worker.id)
+        }
+      }
+    }, [_c('span', {
+      staticClass: "glyphicon glyphicon-erase"
+    }, [_vm._v("Удалить")])])])])
   }))]) : _vm._e(), _vm._v(" "), _c('new-worker', {
     ref: "new_worker",
     on: {
@@ -59004,7 +59031,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   })], 1)
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('thead', [_c('tr', [_c('th', [_vm._v("Фамилия")]), _vm._v(" "), _c('th', [_vm._v("Имя")]), _vm._v(" "), _c('th', [_vm._v("Отчество")]), _vm._v(" "), _c('th', [_vm._v("Отдел")]), _vm._v(" "), _c('th', [_vm._v("Описание")]), _vm._v(" "), _c('th', [_vm._v("E-Mail")])])])
+  return _c('thead', [_c('tr', [_c('th', [_vm._v("Фамилия")]), _vm._v(" "), _c('th', [_vm._v("Имя")]), _vm._v(" "), _c('th', [_vm._v("Отчество")]), _vm._v(" "), _c('th', [_vm._v("Отдел")]), _vm._v(" "), _c('th', [_vm._v("Описание")]), _vm._v(" "), _c('th', [_vm._v("E-Mail")]), _vm._v(" "), _c('th', [_vm._v("Удалить сотрудника")])])])
 }]}
 module.exports.render._withStripped = true
 if (false) {
@@ -59356,7 +59383,15 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "click": _vm.submit
     }
-  })])])
+  }), _vm._v(" "), _c('button', {
+    staticClass: "btn btn-default",
+    attrs: {
+      "type": "reset"
+    },
+    on: {
+      "click": _vm.clearForm
+    }
+  }, [_vm._v("Сброс")])])])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {

@@ -42,7 +42,9 @@
 
                 var form = new FormData();
                 form.append('file', this.file, this.file.name);
-                axios.post('files/' + this.order.id, form);
+                axios.post('files/' + this.order.id, form).then((response) => {
+                    this.files.push(response.data);
+                });
             },
             open() {
                 this.$refs.file_input.click()

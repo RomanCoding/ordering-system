@@ -19,6 +19,7 @@ Route::patch('/departments/{department}', 'DepartmentController@update');
 Route::delete('/departments/{department}', 'DepartmentController@destroy');
 Route::get('/workers', 'WorkerController@index');
 Route::post('/workers', 'WorkerController@store');
+Route::delete('/workers/{worker}', 'WorkerController@destroy');
 Route::patch('/workers/{user}', 'WorkerController@update');
 
 Route::get('/orders', 'OrderController@index');

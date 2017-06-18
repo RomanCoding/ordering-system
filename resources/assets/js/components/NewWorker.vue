@@ -48,6 +48,7 @@
 
         <div class="col-md-6 col-md-offset-4">
             <button type="submit" class="btn btn-default" @click="submit" v-text="buttonText"></button>
+            <button type="reset" class="btn btn-default" @click="clearForm">Сброс</button>
         </div>
     </div>
 </template>
@@ -108,7 +109,8 @@
                     email: '',
                     password: '',
                     description: ''
-                }
+                };
+                this.editing = false;
             },
             edit(person) {
                 this.editing = true;

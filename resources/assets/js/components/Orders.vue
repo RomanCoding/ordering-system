@@ -56,8 +56,9 @@
                 <div role="tabpanel" class="tab-pane" id="archived">
                     <!-- Tab panes -->
                     <div class="col-md-3" style="padding-left: 0; padding-right: 0;">
+                        <input type="text" v-model="searchText" class="form-control" placeholder="Поиск">
                         <div class="list-group">
-                            <a href="#" class="list-group-item" v-for="order in archivedOrders"
+                            <a href="#" class="list-group-item" v-for="order in archOrders"
                                @click="currentOrder = order">
                                 <h4 class="list-group-item-heading">{{ order.title }}</h4>
                                 <p class="list-group-item-text">
@@ -100,15 +101,22 @@
                 incomingOrders: [],
                 outgoingOrders: [],
                 archivedOrders: [],
+                archOrders: [],
                 currentOrder: null,
+                searchText: ''
             }
         },
-        computed: {},
+        watch: {
+            searchText() {
+                return this.archOrders = _.filter(this.archivedOrders, order => order.title.indexOf(this.searchText) >= 0);
+            }
+        },
         created() {
             axios.get('/orders/').then(({data}) => {
                 this.incomingOrders = data.incomingOrders;
                 this.outgoingOrders = data.outgoingOrders;
                 this.archivedOrders = data.archivedOrders;
+                this.archOrders = data.archivedOrders;
             });
 
         },

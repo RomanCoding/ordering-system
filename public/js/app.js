@@ -28023,6 +28023,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 
 
@@ -28037,20 +28038,31 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             incomingOrders: [],
             outgoingOrders: [],
             archivedOrders: [],
-            currentOrder: null
+            archOrders: [],
+            currentOrder: null,
+            searchText: ''
         };
     },
 
-    computed: {},
+    watch: {
+        searchText: function searchText() {
+            var _this = this;
+
+            return this.archOrders = _.filter(this.archivedOrders, function (order) {
+                return order.title.indexOf(_this.searchText) >= 0;
+            });
+        }
+    },
     created: function created() {
-        var _this = this;
+        var _this2 = this;
 
         axios.get('/orders/').then(function (_ref) {
             var data = _ref.data;
 
-            _this.incomingOrders = data.incomingOrders;
-            _this.outgoingOrders = data.outgoingOrders;
-            _this.archivedOrders = data.archivedOrders;
+            _this2.incomingOrders = data.incomingOrders;
+            _this2.outgoingOrders = data.outgoingOrders;
+            _this2.archivedOrders = data.archivedOrders;
+            _this2.archOrders = data.archivedOrders;
         });
     },
 
@@ -59589,9 +59601,30 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "padding-left": "0",
       "padding-right": "0"
     }
-  }, [_c('div', {
+  }, [_c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.searchText),
+      expression: "searchText"
+    }],
+    staticClass: "form-control",
+    attrs: {
+      "type": "text",
+      "placeholder": "Поиск"
+    },
+    domProps: {
+      "value": (_vm.searchText)
+    },
+    on: {
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.searchText = $event.target.value
+      }
+    }
+  }), _vm._v(" "), _c('div', {
     staticClass: "list-group"
-  }, _vm._l((_vm.archivedOrders), function(order) {
+  }, _vm._l((_vm.archOrders), function(order) {
     return _c('a', {
       staticClass: "list-group-item",
       attrs: {

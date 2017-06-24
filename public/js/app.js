@@ -28000,6 +28000,29 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -28013,6 +28036,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         return {
             incomingOrders: [],
             outgoingOrders: [],
+            archivedOrders: [],
             currentOrder: null
         };
     },
@@ -28026,17 +28050,26 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             _this.incomingOrders = data.incomingOrders;
             _this.outgoingOrders = data.outgoingOrders;
+            _this.archivedOrders = data.archivedOrders;
         });
     },
 
     methods: {
         classes: function classes(order) {
-            return ['list-group-item', __WEBPACK_IMPORTED_MODULE_0_moment___default()(order.due_date).diff(__WEBPACK_IMPORTED_MODULE_0_moment___default()(), 'days') < 4 ? 'list-group-item-warning' : '', __WEBPACK_IMPORTED_MODULE_0_moment___default()(order.due_date).diff(__WEBPACK_IMPORTED_MODULE_0_moment___default()(), 'days') < 2 || order.important ? 'list-group-item-danger' : ''];
+            return ['list-group-item', __WEBPACK_IMPORTED_MODULE_0_moment___default()(order.due_date).diff(__WEBPACK_IMPORTED_MODULE_0_moment___default()(), 'days') < 4 ? 'list-group-item-warning' : '', __WEBPACK_IMPORTED_MODULE_0_moment___default()(order.due_date).diff(__WEBPACK_IMPORTED_MODULE_0_moment___default()(), 'days') < 2 ? 'list-group-item-danger' : ''];
         },
         moment: function moment() {
             var date = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
 
             return __WEBPACK_IMPORTED_MODULE_0_moment___default()([]).locale('ru');
+        },
+        loadOrder: function loadOrder(order) {
+            this.currentOrder = order;
+            if (order.unreadCount) {
+                axios.post('/orders/' + order.id + '/read').then(function () {
+                    order.unreadCount = 0;
+                });
+            }
         }
     }
 });
@@ -59495,16 +59528,23 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       },
       on: {
         "click": function($event) {
-          _vm.currentOrder = order
+          _vm.loadOrder(order)
         }
       }
-    }, [_c('h4', {
+    }, [(order.unreadCount) ? _c('span', {
+      staticClass: "badge",
+      domProps: {
+        "textContent": _vm._s(order.unreadCount)
+      }
+    }) : _vm._e(), _vm._v(" "), _c('h4', {
       staticClass: "list-group-item-heading"
     }, [_vm._v(_vm._s(order.title))]), _vm._v(" "), _c('p', {
       staticClass: "list-group-item-text"
     }, [_vm._v("\n                                Поручил: " + _vm._s(order.creator.name) + "\n                            ")]), _vm._v(" "), _c('p', {
       staticClass: "list-group-item-text"
-    }, [_vm._v("\n                                Срок сдачи: " + _vm._s(order.due_date) + "\n                            ")])])
+    }, [_vm._v("\n                                Срок сдачи: " + _vm._s(order.due_date) + "\n                            ")]), _vm._v(" "), (order.important) ? _c('span', {
+      staticClass: "glyphicon glyphicon-exclamation-sign"
+    }, [_vm._v("Важно!")]) : _vm._e()])
   }))])]), _vm._v(" "), _c('div', {
     staticClass: "tab-pane",
     attrs: {
@@ -59520,6 +59560,38 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('div', {
     staticClass: "list-group"
   }, _vm._l((_vm.outgoingOrders), function(order) {
+    return _c('a', {
+      staticClass: "list-group-item",
+      attrs: {
+        "href": "#"
+      },
+      on: {
+        "click": function($event) {
+          _vm.currentOrder = order
+        }
+      }
+    }, [_c('h4', {
+      staticClass: "list-group-item-heading"
+    }, [_vm._v(_vm._s(order.title))]), _vm._v(" "), _c('p', {
+      staticClass: "list-group-item-text"
+    }, [_vm._v("\n                                Исполнитель: " + _vm._s(order.worker.name) + "\n                            ")]), _vm._v(" "), _c('p', {
+      staticClass: "list-group-item-text"
+    }, [_vm._v("\n                                Срок сдачи: " + _vm._s(order.due_date) + "\n                            ")])])
+  }))])]), _vm._v(" "), _c('div', {
+    staticClass: "tab-pane",
+    attrs: {
+      "role": "tabpanel",
+      "id": "archived"
+    }
+  }, [_c('div', {
+    staticClass: "col-md-3",
+    staticStyle: {
+      "padding-left": "0",
+      "padding-right": "0"
+    }
+  }, [_c('div', {
+    staticClass: "list-group"
+  }, _vm._l((_vm.archivedOrders), function(order) {
     return _c('a', {
       staticClass: "list-group-item",
       attrs: {
@@ -59594,7 +59666,18 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "role": "tab",
       "data-toggle": "tab"
     }
-  }, [_vm._v("Исходящие")])])])
+  }, [_vm._v("Исходящие")])]), _vm._v(" "), _c('li', {
+    attrs: {
+      "role": "presentation"
+    }
+  }, [_c('a', {
+    attrs: {
+      "href": "#archived",
+      "aria-controls": "archived",
+      "role": "tab",
+      "data-toggle": "tab"
+    }
+  }, [_vm._v("Архив")])])])
 }]}
 module.exports.render._withStripped = true
 if (false) {

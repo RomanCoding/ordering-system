@@ -4,7 +4,9 @@
     <div class="container">
         <div class="panel panel-info">
             <div class="panel-heading"><h3 class="panel-title">Добро пожаловать!</h3></div>
-            <div class="panel-body">Личный кабинет.</div>
+            <div class="panel-body">Личный кабинет.
+                <br>Пользователь: {{ Auth::user()->fullName() }}
+            </div>
             <a href="{{ route('logout') }}" class="pull-right"
                onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">

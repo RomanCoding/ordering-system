@@ -18,13 +18,15 @@ class OrderController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return array
      */
     public function index()
     {
+        $user = auth()->user();
         return [
-            'incomingOrders' => auth()->user()->incomingOrders,
-            'outgoingOrders' => auth()->user()->outgoingOrders
+            'incomingOrders' => $user->incomingOrders,
+            'outgoingOrders' => $user->outgoingOrders,
+            'archivedOrders' => $user->archivedOrders()
         ];
     }
 

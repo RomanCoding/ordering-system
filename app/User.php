@@ -48,7 +48,9 @@ class User extends Authenticatable
      */
     public function outgoingOrders()
     {
-        return $this->hasMany(Order::class, 'creator_id')->orderBy('due_date');
+        return $this->hasMany(Order::class, 'creator_id')
+            ->where('closed', false)
+            ->orderBy('due_date');
     }
 
     /**
@@ -58,7 +60,39 @@ class User extends Authenticatable
      */
     public function incomingOrders()
     {
-        return $this->hasMany(Order::class, 'worker_id')->orderBy('due_date');
+        return $this->hasMany(Order::class, 'worker_id')
+            ->where('closed', false)
+            ->orderBy('due_date');
+    }
+
+    public function archivedOrders()
+    {
+        return $this->archivedIncomingOrders
+            ->merge($this->archivedOutgoingOrders);
+    }
+    
+    /**
+     * Archived (closed) incoming orders.
+     *
+     * @return mixed
+     */
+    public function archivedIncomingOrders()
+    {
+        return $this->hasMany(Order::class, 'worker_id')
+            ->where('closed', 1)
+            ->orderBy('due_date');
+    }
+
+    /**
+     * Archived (closed) outgoing orders.
+     *
+     * @return mixed
+     */
+    public function archivedOutgoingOrders()
+    {
+        return $this->hasMany(Order::class, 'creator_id')
+            ->where('closed', 1)
+            ->orderBy('due_date');
     }
 
     /**
@@ -101,5 +135,15 @@ class User extends Authenticatable
     public function createOrder($order)
     {
         return $this->outgoingOrders()->create($order->all());
+    }
+
+    /**
+     * Get full name of a user.
+     *
+     * @return string
+     */
+    public function fullName()
+    {
+        return $this->surname . " " . $this->name . " " . $this->patronymic;
     }
 }

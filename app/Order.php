@@ -10,7 +10,7 @@ class Order extends Model
 
     protected $with = ['creator', 'worker', 'files'];
 
-    protected $appends = ['creator', 'worker', 'messages', 'files'];
+    protected $appends = ['creator', 'worker', 'messages', 'files', 'unreadCount'];
 
     /**
      * A person who created an order.
@@ -109,5 +109,18 @@ class Order extends Model
     {
         $this->update(['closed' => 1]);
         return $this;
+    }
+
+    /**
+     * Return count of unread incoming messages for authenticated user.
+     *
+     * @return int
+     */
+    public function getUnreadCountAttribute()
+    {
+        return $this->messages()
+            ->where('sender_id', '!=', \Auth::id())
+            ->where('read', '=', 0)
+            ->count();
     }
 }

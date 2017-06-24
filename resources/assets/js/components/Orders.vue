@@ -10,6 +10,10 @@
                 <a href="#outcoming" aria-controls="outcoming" role="tab"
                    data-toggle="tab">Исходящие</a>
             </li>
+            <li role="presentation">
+                <a href="#archived" aria-controls="archived" role="tab"
+                   data-toggle="tab">Архив</a>
+            </li>
         </ul>
         <div class="pre-scrollable">
             <div class="tab-content">
@@ -18,7 +22,8 @@
                     <div class="col-md-3 no-left-padding">
                         <div class="list-group">
                             <a href="#" :class="classes(order)" v-for="order in incomingOrders"
-                               @click="currentOrder = order">
+                               @click="loadOrder(order)">
+                                <span class="badge" v-if="order.unreadCount" v-text="order.unreadCount"></span>
                                 <h4 class="list-group-item-heading">{{ order.title }}</h4>
                                 <p class="list-group-item-text">
                                     Поручил: {{ order.creator.name }}
@@ -26,6 +31,7 @@
                                 <p class="list-group-item-text">
                                     Срок сдачи: {{ order.due_date }}
                                 </p>
+                                <span v-if="order.important" class="glyphicon glyphicon-exclamation-sign">Важно!</span>
                             </a>
                         </div>
                     </div>
@@ -35,6 +41,23 @@
                     <div class="col-md-3" style="padding-left: 0; padding-right: 0;">
                         <div class="list-group">
                             <a href="#" class="list-group-item" v-for="order in outgoingOrders"
+                               @click="currentOrder = order">
+                                <h4 class="list-group-item-heading">{{ order.title }}</h4>
+                                <p class="list-group-item-text">
+                                    Исполнитель: {{ order.worker.name }}
+                                </p>
+                                <p class="list-group-item-text">
+                                    Срок сдачи: {{ order.due_date }}
+                                </p>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="archived">
+                    <!-- Tab panes -->
+                    <div class="col-md-3" style="padding-left: 0; padding-right: 0;">
+                        <div class="list-group">
+                            <a href="#" class="list-group-item" v-for="order in archivedOrders"
                                @click="currentOrder = order">
                                 <h4 class="list-group-item-heading">{{ order.title }}</h4>
                                 <p class="list-group-item-text">
@@ -76,6 +99,7 @@
             return {
                 incomingOrders: [],
                 outgoingOrders: [],
+                archivedOrders: [],
                 currentOrder: null,
             }
         },
@@ -84,6 +108,7 @@
             axios.get('/orders/').then(({data}) => {
                 this.incomingOrders = data.incomingOrders;
                 this.outgoingOrders = data.outgoingOrders;
+                this.archivedOrders = data.archivedOrders;
             });
 
         },
@@ -92,11 +117,19 @@
                 return [
                     'list-group-item',
                     moment(order.due_date).diff(moment(), 'days') < 4 ? 'list-group-item-warning' : '',
-                    (moment(order.due_date).diff(moment(), 'days') < 2 || order.important) ? 'list-group-item-danger' : '',
+                    (moment(order.due_date).diff(moment(), 'days') < 2) ? 'list-group-item-danger' : '',
                 ];
             },
             moment(date = []) {
                 return moment([]).locale('ru');
+            },
+            loadOrder(order) {
+                this.currentOrder = order;
+                if (order.unreadCount) {
+                    axios.post('/orders/' + order.id + '/read').then(() => {
+                        order.unreadCount = 0;
+                    });
+                }
             }
         }
     }

@@ -85,4 +85,11 @@ class MessageController extends Controller
     {
         //
     }
+
+    public function readAll(Order $order)
+    {
+        $order->messages()
+            ->where('sender_id', '!=', auth()->id())
+            ->update(['read' => true]);
+    }
 }

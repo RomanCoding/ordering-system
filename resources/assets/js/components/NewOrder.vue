@@ -64,6 +64,14 @@
             open() {
                 this.$refs.file_input.click()
             },
+            clear() {
+                this.title = '';
+                this.body = '';
+                this.worker_id = '';
+                this.due_date = '';
+                this.important = 0;
+                this.formData = null;
+            },
             create() {
                 if (!this.formData) {
                     this.formData = new FormData();
@@ -73,7 +81,11 @@
                 this.formData.append('worker_id', this.worker_id);
                 this.formData.append('due_date', this.due_date);
                 this.formData.append('important', +this.important);
-                axios.post('/orders', this.formData);
+                axios.post('/orders', this.formData).then(({data}) => {
+                    this.$emit('added', data);
+                    flash('Заказ отправлен!');
+                });
+                this.clear();
             },
             onFileChange (ele) {
                 this.errors = {};
@@ -94,7 +106,7 @@
     }
 </script>
 
-<style>
+<style scoped>
     .form-group input[type="checkbox"] {
         display: none;
     }

@@ -56,7 +56,33 @@
                 <div role="tabpanel" class="tab-pane" id="archived">
                     <!-- Tab panes -->
                     <div class="col-md-3" style="padding-left: 0; padding-right: 0;">
-                        <input type="text" v-model="searchText" class="form-control" placeholder="Поиск">
+                        <div class="row">
+                            <div class="form-group">
+                                <label for="searchText" class="col-xs-6">По заголовку</label>
+                                <div class="col-xs-6">
+                                    <input id="searchText" type="text" v-model="searchText"
+                                           class="form-control input-sm" @keyup.enter="filter">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="searchDateStart" class="col-xs-6">Дата от</label>
+                                <div class="col-xs-6">
+                                    <input id="searchDateStart" type="date" v-model="searchDateStart"
+                                           class="form-control input-sm">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="searchDateDue" class="col-xs-6">Дата до</label>
+                                <div class="col-xs-6">
+                                    <input id="searchDateDue" type="date" v-model="searchDateDue"
+                                           class="form-control input-sm">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button @click="filter" class="btn btn-success">Поиск</button>
+                        </div>
+
                         <div class="list-group">
                             <a href="#" class="list-group-item" v-for="order in archOrders"
                                @click="currentOrder = order">
@@ -80,7 +106,7 @@
             </div>
         </div>
         <div class="col-md-12 new-order no-left-padding">
-            <new-order :workers="this.workers">
+            <new-order :workers="this.workers" @added="add">
 
             </new-order>
         </div>
@@ -103,12 +129,9 @@
                 archivedOrders: [],
                 archOrders: [],
                 currentOrder: null,
-                searchText: ''
-            }
-        },
-        watch: {
-            searchText() {
-                return this.archOrders = _.filter(this.archivedOrders, order => order.title.indexOf(this.searchText) >= 0);
+                searchText: '',
+                searchDateStart: null,
+                searchDateDue: null,
             }
         },
         created() {
@@ -121,6 +144,9 @@
 
         },
         methods: {
+            add(order) {
+                this.outgoingOrders.push(order);
+            },
             classes(order) {
                 return [
                     'list-group-item',
@@ -138,12 +164,22 @@
                         order.unreadCount = 0;
                     });
                 }
+            },
+            filter() {
+                console.log('213');
+                this.archOrders = this.archivedOrders;
+                if (this.searchText)
+                    this.archOrders = this.archOrders.filter(order => order.title.indexOf(this.searchText) >= 0);
+                if (this.searchDateStart)
+                    this.archOrders = this.archOrders.filter(order => moment(order.due_date).isSameOrAfter(moment(this.searchDateStart)));
+                if (this.searchDateDue)
+                    this.archOrders = this.archOrders.filter(order => moment(order.due_date).isSameOrBefore(moment(this.searchDateDue)));
             }
         }
     }
 </script>
 
-<style>
+<style scoped>
     .pre-scrollable {
         max-height: 500px;
     }

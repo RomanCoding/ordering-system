@@ -60,6 +60,7 @@ class OrderController extends Controller
             $path = $request->file('file')->store("files/{$order->id}");
             $order->attachFile($path);
         }
+        return $order;
     }
 
     /**

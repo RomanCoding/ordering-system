@@ -75,7 +75,7 @@
     }
 </script>
 
-<style>
+<style scoped>
     .messages {
         background-color: #fff;
     }
